@@ -1,5 +1,5 @@
 from tkinter import *
-
+from scr.Filme import *
 
 # Classe do container principal
 class Application:
@@ -13,15 +13,15 @@ class Application:
         # Informa-se que será usado a geometria pack() [Podendo ser: grid, pack, place]
         self.widget1.pack()
 
-        self.widget2 = Frame(master, pady=15, padx=20)
+        self.widget2 = Frame(master, pady=7, padx=20)
         # Informa-se que será usado a geometria pack() [Podendo ser: grid, pack, place]
         self.widget2.pack()
 
-        self.widget3 = Frame(master, pady=15, padx=20)
+        self.widget3 = Frame(master, pady=7, padx=20)
         # Informa-se que será usado a geometria pack() [Podendo ser: grid, pack, place]
         self.widget3.pack()
 
-        self.widget4 = Frame(master, pady=15, padx=20)
+        self.widget4 = Frame(master, pady=7, padx=20)
         # Informa-se que será usado a geometria pack() [Podendo ser: grid, pack, place]
         self.widget4.pack()
 
@@ -72,6 +72,15 @@ class Application:
         self.entrada_fonte = Entry(self.widget4, width=40)
         self.entrada_fonte.pack(side=LEFT)
 
+        # Botão para atualizar txt com os filmes
+        self.atualizar = Button(self.widget5, command=lambda: self.atualiza(), text="Atualizar")
+        self.atualizar["width"] = 7
+        self.atualizar.pack()
+
+        # Status da atualização
+        self.status = Label(self.widget7, text="")
+        self.status.pack()
+
         # Informamos que haverá um botão no container principal e que sua função será quitar
         self.fechar = Button(self.widget8, command=self.widget8.quit)
         # Informa-se o texto presente
@@ -80,6 +89,34 @@ class Application:
         self.fechar["width"] = 5
         # Exibe
         self.fechar.pack()
+
+    def atualiza(self):
+        filme = Filme()
+        # Pegando todos os valores presentes nos campos de entrada
+        entrada_nome = self.entrada_nome.get()
+        entrada_data = self.entrada_data.get()
+        entrada_fonte = self.entrada_fonte.get()
+
+        # Instanciando objeto pelos gets
+        filme.set_nome(entrada_nome)
+        filme.set_data(entrada_data)
+        filme.set_fonte(entrada_fonte)
+
+        # print(entrada_nome, entrada_data, entrada_fonte)
+
+
+        if filme.verifica_data() and filme.verifica_dados():
+            self.status["text"] = "Atualizando..."
+        # Verificando se os dados estão preenchidos
+        elif not filme.verifica_dados():
+            self.status["text"] = "Dados incompletos!"
+            # Verificando formatação da data
+        else:
+            self.status["text"] = "A data informada está incorreta!"
+
+
+
+
 
 
 
