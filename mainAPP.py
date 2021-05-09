@@ -139,9 +139,9 @@ class Application:
 
     def monta_texto(self, filme):
         # Abre arquivo
-        file = open(adress, "r", encoding='utf-8')
+        file = open(adress, 'r', encoding="ISO-8859-1")
         lines = file.readlines()
-        last = lines[len(lines)-1]
+        last = lines[len(lines) - 1]
         file.close()
         last = last.split("-")[0]
         new_last = str(int(last) + 1)
@@ -154,7 +154,7 @@ class Application:
         texto = "\n" + self.status.cget("text")
         if len(texto.split("-")) == 3:
             # Abre arquivo e modifica
-            file = open(adress, "a", encoding='utf-8')
+            file = open(adress, "a", encoding="ISO-8859-1")
             file.writelines(texto)
             # Fecha arquivo
             file.close()
@@ -177,8 +177,8 @@ class Application:
 
 
 # Endereço do arquivo filmes
-# adress = "files/filmes.txt"
-adress = "C:\Users\dougl\Desktop\#Filmes 2021.txt"
+adress = "files/filmes.txt"
+# adress = 'C:/Users/dougl/Desktop/#Filmes 2021.txt'
 root = Tk()
 # Definindo tamanho da janela
 root.geometry("475x400")
