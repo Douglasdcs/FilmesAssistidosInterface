@@ -1,5 +1,7 @@
 from tkinter import *
+from tkinter import messagebox
 from scr.Filme import *
+
 
 # Classe do container principal
 class Application:
@@ -72,21 +74,42 @@ class Application:
         self.entrada_fonte = Entry(self.widget4, width=40)
         self.entrada_fonte.pack(side=LEFT)
 
-        # Botão para atualizar txt com os filmes
-        self.atualizar = Button(self.widget5, command=lambda: self.atualiza(), text="Atualizar")
+        # Botão para atualizar frase para verificação
+        self.atualizar = Button(self.widget5, command=lambda: self.atualiza(), text="Montar")
         self.atualizar["width"] = 7
         self.atualizar.pack()
 
+        # Status da atualização estático
+        self.status_statico = Label(self.widget6, text="Status: ")
+        self.status_statico["font"] = ("Calibri", "11", "bold")
+        self.status_statico.pack(side=LEFT)
+
         # Status da atualização
-        self.status = Label(self.widget7, text="")
-        self.status.pack()
+        self.status = Label(self.widget6, text="")
+        self.status["font"] = ("Calibri", "11", "bold")
+        self.status.pack(side=LEFT)
+
+        # # Botão para salvar no Banco de dados o filme ***
+        # self.salva_bd = Button(self.widget7, command=lambda: self.atualiza(), text="Salvar BD")
+        # self.salva_bd["width"] = 8
+        # self.salva_bd.pack(side=LEFT)
+
+        # Botão para limpas os campos das entradas
+        self.limpa = Button(self.widget7, command=lambda: self.limpa_campos(), text="Limpar")
+        self.limpa["width"] = 8
+        self.limpa.pack(side=LEFT)
+
+        # Botão para salvar no txt com os filmes
+        self.salva_texto = Button(self.widget7, command=lambda: self.salva_txt(), text="Salvar TXT")
+        self.salva_texto["width"] = 8
+        self.salva_texto.pack(side=LEFT)
 
         # Informamos que haverá um botão no container principal e que sua função será quitar
         self.fechar = Button(self.widget8, command=self.widget8.quit)
         # Informa-se o texto presente
         self.fechar["text"] = "Fechar"
         # Largura
-        self.fechar["width"] = 5
+        self.fechar["width"] = 8
         # Exibe
         self.fechar.pack()
 
@@ -104,9 +127,9 @@ class Application:
 
         # print(entrada_nome, entrada_data, entrada_fonte)
 
-
         if filme.verifica_data() and filme.verifica_dados():
-            self.status["text"] = "Atualizando..."
+            # Monta o texto no formato de salvamento
+            self.monta_texto(filme)
         # Verificando se os dados estão preenchidos
         elif not filme.verifica_dados():
             self.status["text"] = "Dados incompletos!"
@@ -114,14 +137,50 @@ class Application:
         else:
             self.status["text"] = "A data informada está incorreta!"
 
+    def monta_texto(self, filme):
+        # Abre arquivo
+        file = open(adress, 'r', encoding="ISO-8859-1")
+        lines = file.readlines()
+        last = lines[len(lines) - 1]
+        file.close()
+        last = last.split("-")[0]
+        new_last = str(int(last) + 1)
+        # Chama método para concatenar a string que será salva
+        texto = filme.to_string(new_last)
+        self.status["text"] = texto
+
+    def salva_txt(self):
+        # Pegando os dados do Label e colocando um \n no início
+        texto = "\n" + self.status.cget("text")
+        if len(texto.split("-")) == 3:
+            # Abre arquivo e modifica
+            file = open(adress, "a", encoding="ISO-8859-1")
+            file.writelines(texto)
+            # Fecha arquivo
+            file.close()
+            # Indica que foi salvo com sucesso
+            messagebox.showinfo("Arquivo Salvo", "Arquivo salvo com sucesso!")
+            # Limpa as entradas
+            self.limpa_campos()
+            # Seta o label
+            self.status["text"] = "Concluído!"
+        else:
+            # Indica que não foi passado o filme
+            messagebox.showinfo("Erro", "Preencha os campos antes de prosseguir!")
+
+    def limpa_campos(self):
+        # Limpando campos
+        self.entrada_nome.delete(0, END)
+        self.entrada_data.delete(0, END)
+        self.entrada_fonte.delete(0, END)
+        self.status["text"] = ""
 
 
-
-
-
-
+# Endereço do arquivo filmes
+adress = "files/filmes.txt"
+# adress = 'C:/Users/dougl/Desktop/#Filmes 2021.txt'
 root = Tk()
 # Definindo tamanho da janela
-root.geometry("475x350")
+root.geometry("475x400")
 Application(root)
 root.mainloop()

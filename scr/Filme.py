@@ -53,3 +53,6 @@ class Filme:
         if self.nome == "" or self.data == "" or self.fonte == "":
             return 0
         return 1
+
+    def to_string(self, num):
+        return num + "- " + self.nome + " - " + self.data + " (" + self.fonte + ")"
